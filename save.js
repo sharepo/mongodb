@@ -1,0 +1,28 @@
+var mongoose = require('mongoose');
+
+// setup mongo db connect to "test" database
+mongoose.Promise = global.Promise;
+mongoose.connect('mongodb://localhost/test');
+
+// Models
+var Kitty = require('./models/Kitty');
+
+// connect to database
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+	console.log('connected!');
+	// create document
+	var fluffy = new Kitty({
+		name: 'fluffy'
+	});
+
+	fluffy.deviceList.push('device2');
+
+	// save into database
+	fluffy.save(function(err, fluffy) {
+		if (err) {
+			return console.error('save() error => ' + err);
+		}
+	});
+});
